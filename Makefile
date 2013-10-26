@@ -5,15 +5,13 @@
 # == CHANGE THE SETTINGS BELOW TO SUIT YOUR ENVIRONMENT =======================
 
 # Your platform. See PLATS for possible values.
-PLAT= none
+PLAT= generic
 
 # Where to install. The installation starts in the src and doc directories,
 # so take care if INSTALL_TOP is not an absolute path.
-INSTALL_TOP= /usr/local
-INSTALL_BIN= $(INSTALL_TOP)/bin
+INSTALL_TOP= $(DEVKITPRO)/libogc
 INSTALL_INC= $(INSTALL_TOP)/include
-INSTALL_LIB= $(INSTALL_TOP)/lib
-INSTALL_MAN= $(INSTALL_TOP)/man/man1
+INSTALL_LIB= $(INSTALL_TOP)/lib/wii
 #
 # You probably want to make INSTALL_LMOD and INSTALL_CMOD consistent with
 # LUA_ROOT, LUA_LDIR, and LUA_CDIR in luaconf.h (and also with etc/lua.pc).
@@ -38,13 +36,11 @@ RANLIB= ranlib
 # == END OF USER SETTINGS. NO NEED TO CHANGE ANYTHING BELOW THIS LINE =========
 
 # Convenience platforms targets.
-PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
+PLATS= generic
 
 # What to install.
-TO_BIN= lua luac
 TO_INC= lua.h luaconf.h lualib.h lauxlib.h ../etc/lua.hpp
 TO_LIB= liblua.a
-TO_MAN= lua.1 luac.1
 
 # Lua version and release.
 V= 5.1
@@ -59,11 +55,9 @@ test:	dummy
 	src/lua test/hello.lua
 
 install: dummy
-	cd src && $(MKDIR) $(INSTALL_BIN) $(INSTALL_INC) $(INSTALL_LIB) $(INSTALL_MAN) $(INSTALL_LMOD) $(INSTALL_CMOD)
-	cd src && $(INSTALL_EXEC) $(TO_BIN) $(INSTALL_BIN)
+	cd src && $(MKDIR) $(INSTALL_INC) $(INSTALL_LIB) $(INSTALL_LMOD) $(INSTALL_CMOD)
 	cd src && $(INSTALL_DATA) $(TO_INC) $(INSTALL_INC)
 	cd src && $(INSTALL_DATA) $(TO_LIB) $(INSTALL_LIB)
-	cd doc && $(INSTALL_DATA) $(TO_MAN) $(INSTALL_MAN)
 
 ranlib:
 	cd src && cd $(INSTALL_LIB) && $(RANLIB) $(TO_LIB)
@@ -92,10 +86,8 @@ echo:
 	@echo ""
 	@echo "PLAT = $(PLAT)"
 	@echo "INSTALL_TOP = $(INSTALL_TOP)"
-	@echo "INSTALL_BIN = $(INSTALL_BIN)"
 	@echo "INSTALL_INC = $(INSTALL_INC)"
 	@echo "INSTALL_LIB = $(INSTALL_LIB)"
-	@echo "INSTALL_MAN = $(INSTALL_MAN)"
 	@echo "INSTALL_LMOD = $(INSTALL_LMOD)"
 	@echo "INSTALL_CMOD = $(INSTALL_CMOD)"
 	@echo "INSTALL_EXEC = $(INSTALL_EXEC)"
@@ -108,10 +100,8 @@ echo:
 pecho:
 	@echo "V = $(V)"
 	@echo "R = $(R)"
-	@echo "TO_BIN = $(TO_BIN)"
 	@echo "TO_INC = $(TO_INC)"
 	@echo "TO_LIB = $(TO_LIB)"
-	@echo "TO_MAN = $(TO_MAN)"
 
 # echo config parameters as Lua code
 # uncomment the last sed expression if you want nil instead of empty strings

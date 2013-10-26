@@ -5,22 +5,21 @@
 # == CHANGE THE SETTINGS BELOW TO SUIT YOUR ENVIRONMENT =======================
 
 # Your platform. See PLATS for possible values.
-PLAT= none
+PLAT= generic
 
-CC= gcc
-CFLAGS= -O2 -Wall $(MYCFLAGS)
-AR= ar rcu
-RANLIB= ranlib
+# copied from devkitppc-rules
+DKPREFIX = $(DEVKITPPC)/bin/powerpc-eabi-
+MACHDEP = -DGEKKO -mrvl -mcpu=750 -meabi -mhard-float
+
+CC= $(DKPREFIX)gcc
+CFLAGS= -g -O2 -Wall $(MACHDEP)
+AR= $(DKPREFIX)ar rcu
+RANLIB= $(DKPREFIX)ranlib
 RM= rm -f
-LIBS= -lm $(MYLIBS)
-
-MYCFLAGS=
-MYLDFLAGS=
-MYLIBS=
 
 # == END OF USER SETTINGS. NO NEED TO CHANGE ANYTHING BELOW THIS LINE =========
 
-PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
+PLATS= generic
 
 LUA_A=	liblua.a
 CORE_O=	lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
@@ -29,14 +28,8 @@ CORE_O=	lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
 LIB_O=	lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o loslib.o ltablib.o \
 	lstrlib.o loadlib.o linit.o
 
-LUA_T=	lua
-LUA_O=	lua.o
-
-LUAC_T=	luac
-LUAC_O=	luac.o print.o
-
-ALL_O= $(CORE_O) $(LIB_O) $(LUA_O) $(LUAC_O)
-ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T)
+ALL_O= $(CORE_O) $(LIB_O)
+ALL_T= $(LUA_A)
 ALL_A= $(LUA_A)
 
 default: $(PLAT)
@@ -51,12 +44,6 @@ $(LUA_A): $(CORE_O) $(LIB_O)
 	$(AR) $@ $(CORE_O) $(LIB_O)	# DLL needs all object files
 	$(RANLIB) $@
 
-$(LUA_T): $(LUA_O) $(LUA_A)
-	$(CC) -o $@ $(MYLDFLAGS) $(LUA_O) $(LUA_A) $(LIBS)
-
-$(LUAC_T): $(LUAC_O) $(LUA_A)
-	$(CC) -o $@ $(MYLDFLAGS) $(LUAC_O) $(LUA_A) $(LIBS)
-
 clean:
 	$(RM) $(ALL_T) $(ALL_O)
 
@@ -70,9 +57,6 @@ echo:
 	@echo "AR = $(AR)"
 	@echo "RANLIB = $(RANLIB)"
 	@echo "RM = $(RM)"
-	@echo "MYCFLAGS = $(MYCFLAGS)"
-	@echo "MYLDFLAGS = $(MYLDFLAGS)"
-	@echo "MYLIBS = $(MYLIBS)"
 
 # convenience targets for popular platforms
 
@@ -80,40 +64,8 @@ none:
 	@echo "Please choose a platform:"
 	@echo "   $(PLATS)"
 
-aix:
-	$(MAKE) all CC="xlc" CFLAGS="-O2 -DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS="-ldl" MYLDFLAGS="-brtl -bexpall"
-
-ansi:
-	$(MAKE) all MYCFLAGS=-DLUA_ANSI
-
-bsd:
-	$(MAKE) all MYCFLAGS="-DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS="-Wl,-E"
-
-freebsd:
-	$(MAKE) all MYCFLAGS="-DLUA_USE_LINUX" MYLIBS="-Wl,-E -lreadline"
-
 generic:
-	$(MAKE) all MYCFLAGS=
-
-linux:
-	$(MAKE) all MYCFLAGS=-DLUA_USE_LINUX MYLIBS="-Wl,-E -ldl -lreadline -lhistory -lncurses"
-
-macosx:
-	$(MAKE) all MYCFLAGS=-DLUA_USE_LINUX MYLIBS="-lreadline"
-# use this on Mac OS X 10.3-
-#	$(MAKE) all MYCFLAGS=-DLUA_USE_MACOSX
-
-mingw:
-	$(MAKE) "LUA_A=lua51.dll" "LUA_T=lua.exe" \
-	"AR=$(CC) -shared -o" "RANLIB=strip --strip-unneeded" \
-	"MYCFLAGS=-DLUA_BUILD_AS_DLL" "MYLIBS=" "MYLDFLAGS=-s" lua.exe
-	$(MAKE) "LUAC_T=luac.exe" luac.exe
-
-posix:
-	$(MAKE) all MYCFLAGS=-DLUA_USE_POSIX
-
-solaris:
-	$(MAKE) all MYCFLAGS="-DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS="-ldl"
+	$(MAKE) all
 
 # list targets that do not create files (but not all makes understand .PHONY)
 .PHONY: all $(PLATS) default o a clean depend echo none
