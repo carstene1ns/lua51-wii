@@ -1,0 +1,5 @@
+
+# ignore build objects and library
+
+src/*.o
+src/*.a
