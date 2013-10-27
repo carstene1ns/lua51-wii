@@ -1,0 +1,51 @@
+Lua 5.1.5 for Nintendo Wii
+
+Installation
+------------
+
+Be sure DevkitPPC and libogc is installed and $DEVKITPRO is an exported variable.
+
+Then the usual
+
+cd /to/lua51-wii/dir
+make -j <number of processor cores/threads> (eg. -j2)
+
+will build the library and
+
+make install
+
+will install library and header files in your DevkitPro installation folder.
+
+Use
+---
+
+Include lua headers in your source files, eg:
+#include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
+
+Add -llua to your LIBS in Makefile
+
+If you need file system access, use an external library (for example libfat)
+and initalize it before trying to access any files.
+
+TODO / BUGS / Limitations
+-------------------------
+
+* Add proper Wii thread support
+* Add proper time support
+* The stand-alone-interpreter and bytecode-compiler are not build.
+* Launching external programs (system()) will likely never work
+
+Authors / Porters
+-----------------
+
+Feesh - 2008
+ - initial Port
+ - disabling problematic functions
+Owen
+carstene1ns - 2013
+ - update to 5.1.5
+ - removed fat initialize (should be done externally)
+ - rewrote Makefiles
+ - cleanup
