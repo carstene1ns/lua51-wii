@@ -33,7 +33,7 @@ TODO / BUGS / Limitations
 -------------------------
 
 * Add proper Wii thread support
-* Add proper time support
+* Add proper time support (in testing)
 * The stand-alone-interpreter and bytecode-compiler are not build.
 * Launching external programs (system()) will likely never work
 
@@ -42,10 +42,11 @@ Authors / Porters
 
 Feesh - 2008
  - initial Port
- - disabling problematic functions
+ - disabling problematic functions (time, threads, external launch)
 Owen
 carstene1ns - 2013
  - update to 5.1.5
  - removed fat initialize (should be done externally)
  - rewrote Makefiles
  - cleanup
+ - activated time/date functions again

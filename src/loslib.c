@@ -71,7 +71,6 @@ static int os_getenv (lua_State *L) {
 }
 
 
-#ifndef GEKKO // not supported
 static int os_clock (lua_State *L) {
   lua_pushnumber(L, ((lua_Number)clock())/(lua_Number)CLOCKS_PER_SEC);
   return 1;
@@ -202,6 +201,7 @@ static int os_difftime (lua_State *L) {
 /* }====================================================== */
 
 
+#ifndef GEKKO // not supported
 static int os_setlocale (lua_State *L) {
   static const int cat[] = {LC_ALL, LC_COLLATE, LC_CTYPE, LC_MONETARY,
                       LC_NUMERIC, LC_TIME};
@@ -220,10 +220,10 @@ static int os_exit (lua_State *L) {
 }
 
 static const luaL_Reg syslib[] = {
-#ifndef GEKKO // not supported
   {"clock",     os_clock},
   {"date",      os_date},
   {"difftime",  os_difftime},
+#ifndef GEKKO // not supported
   {"execute",   os_execute},
 #endif // GEKKO
   {"exit",      os_exit},
@@ -232,8 +232,8 @@ static const luaL_Reg syslib[] = {
   {"rename",    os_rename},
 #ifndef GEKKO // not supported
   {"setlocale", os_setlocale},
-  {"time",      os_time},
 #endif // GEKKO
+  {"time",      os_time},
   {"tmpname",   os_tmpname},
   {NULL, NULL}
 };
