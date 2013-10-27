@@ -133,11 +133,16 @@ LUA_API lua_CFunction lua_atpanic (lua_State *L, lua_CFunction panicf) {
   old = G(L)->panic;
   G(L)->panic = panicf;
   lua_unlock(L);
+#ifndef GEKKO
   return old;
+#else // unsupported
+  return NULL;
+#endif // GEKKO
 }
 
 
 LUA_API lua_State *lua_newthread (lua_State *L) {
+#ifndef GEKKO
   lua_State *L1;
   lua_lock(L);
   luaC_checkGC(L);
@@ -147,6 +152,9 @@ LUA_API lua_State *lua_newthread (lua_State *L) {
   lua_unlock(L);
   luai_userstatethread(L, L1);
   return L1;
+#else // unsupported
+  return NULL;
+#endif // GEKKO
 }
 
 
